@@ -14,10 +14,13 @@ import time
 
 print('\n\n\n\n\n\nHello, World!') # Beginning of conversation
 user_response_01 = input("What's your name?\n\n\n") # Asking for name
+
 print("\n\n\nOh, hey " +user_response_01+". Nice to meet you!") # 1/2 Response to receiving name
 print("My name is John Doe") # 2/2
 user_response_02 = int(input("How's your day been on a scale from 1 (terrible) to 10 (amazing)?\n\n\n"))
-if user_response_02 >= 8: # Asking about how day is going, responding accordingly and opening a video
+
+# Asking about how day is going, responding accordingly and opening a video
+if user_response_02 >= 8: 
 	print("\n\n\nWow! I'm glad that it's going so well!Maybe you should go to sleep now so you can end the day well.")
 	print("Here's some relaxing music.")
 	time.sleep(3)
@@ -43,7 +46,7 @@ elif user_response_02 <= 2:
 	time.sleep(3)
 	webbrowser.open('https://www.youtube.com/watch?v=PgD56JEUWFA')
 
-
+# Ending Conversation
 print("\n\n\nI gotta go now :( Have a good day!")
 print('Bye bye!\n\n\n\n\n\n')
 time.sleep(2)
