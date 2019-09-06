@@ -7,7 +7,11 @@
 # Signed: NK 09/06/2019
 
 
-print('\n\n\nHello, World!')
-user_response = input('How are you doing today?\n\n\n')
-print("Oh, " +user_response+"?" " That's nice")
-print('Bye bye!')
+print('\n\n\n\n\n\nHello, World!')
+user_response_01 = input("What's your name?\n\n\n")
+print("\n\n\nOh, hey " +user_response_01+". Nice to meet you!")
+print("My name is John Doe")
+user_response_02 = input("What're you doing today?\n\n\n")
+print(user_response_01+"! "+user_response_02+" sound's very interesting!")
+print("I gotta go now :(")
+print('Bye bye!\n\n\n\n\n\n')
