@@ -9,7 +9,6 @@
 
 import math
 
-x
 # QUESTION 1
 # PROBLEM: The order of operations for the algorithm is incorrectly formatted. The radius isn't squared
 # and thus the equation is divided by, and then multiplied by, the radius.
