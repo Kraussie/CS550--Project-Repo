@@ -1,11 +1,11 @@
 # Author: Nate K
 # Date of Creation: 09/10/2019
-# Date of Last Edit: 09/10/2019
+# Date of Last Edit: 09/12/2019
 # More Advanced Math Problems and Coding Challenges
 # SOURCE: https://stackoverflow.com/questions/9847213/how-do-i-get-the-day-of-week-given-a-date-in-python
 
 # On my honor, I have neither given nor received unauthorized aid.
-# Signed: NK 09/10/2019
+# Signed: NK 09/12/2019
 # *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*
 
 import math
