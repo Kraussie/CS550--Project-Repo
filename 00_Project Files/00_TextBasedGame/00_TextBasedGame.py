@@ -14,7 +14,7 @@ def clearTerminal():
 	os.system('cls' if os.name == 'nt' else 'clear') #clear terminal screen
 
 # *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*
-# GAME INSTRUCTIONS
+# GAME INITIALIZATION/INSTRUCTIONS
 def startInstructions(error_status):
 	clearTerminal()
 	if error_status == True:	
@@ -31,7 +31,7 @@ def startGame():
 		startInstructions(True)
 
 # *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*
-# MEMORY GAME
+# PRINT - MEMORY GAME
 def memoryPrint(level):
 	init_level = level
 	level = init_level
@@ -51,7 +51,8 @@ def memoryPrint(level):
 	if level == 0:
 		memoryCheck(printMemory, init_level)
 
-
+# *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*
+# MEMORY CHECK - MEMORY GAME
 def memoryCheck(printMemory, init_level):
 	clearTerminal()
 	memory_UR = input("Please input the characters in the exact order that they appeared:\n").replace(" ", "")
@@ -73,7 +74,6 @@ def memoryCheck(printMemory, init_level):
 			memoryPrint(1)
 		else:
 			print("Thanks for playing! Have a good day.\nGAME CREATED BY: Nate Krauss '20")
-
 
 # GAME START FUNCTION
 startInstructions(False)
