@@ -14,6 +14,8 @@
 # *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*
 # SETUP FUNCTIONS
 import os, string, time, random
+import colorama
+from colorama import Fore, Back, Style
 
 def clearTerminal():
 	os.system('cls' if os.name == 'nt' else 'clear') #clear terminal screen, from stackoverflow.com
@@ -31,14 +33,14 @@ def countdown321():
 def startInstructions(error_status):
 	clearTerminal()
 	if error_status == True:	
-		print("ERROR: expecting 'yes' or 'yeah'\n\n")
+		print(Back.RED + "ERROR: expecting 'yes' or 'yeah'\n\n" + Style.RESET_ALL)
 		error_status = False
 	print("Hello! Welcome to the Game of Memory. \nThis game will test the limits to which you can remember a series of characters.\nYou will see a character printed, and each level increases in difficulty.")
-	print("\n\n**NOTICE: Be careful not to input any characters before you are prompted**")
+	print(Back.RED + "\n\n**NOTICE: Be careful not to input any characters before you are prompted**" + Style.RESET_ALL)
 	startGame()
 
 def startGame():
-	instructions_UR = input("\n\nAre you ready to play?\n")
+	instructions_UR = input("\n\nAre you ready to play?\n>> ").lower()
 	if instructions_UR == "yes" or instructions_UR == "yeah":
 		print("\nGame starting in:")
 		countdown321()
@@ -54,13 +56,35 @@ def memoryPrint(level):
 	while (level > 0):
 		clearTerminal()
 		printChar = random.choice(string.ascii_letters) #print random character, from stackoverflow.com
-		print(printChar)
+		
+		if init_level > 7:
+			#random colors + even faster print start at level 4
+			colors = list(vars(colorama.Fore).values())
+			colored_chars = [random.choice(colors) + printChar] #sourced from stackoverflow
+			print(random.choice(colors) + printChar + Style.RESET_ALL)
+			time.sleep(.25) #give 1 second of viewing time before clearing screen again
+		elif init_level > 5:
+			#random colors + faster print start at level 4
+			colors = list(vars(colorama.Fore).values())
+			colored_chars = [random.choice(colors) + printChar] #sourced from stackoverflow
+			print(random.choice(colors) + printChar + Style.RESET_ALL)
+			time.sleep(.5) #give 1 second of viewing time before clearing screen again
+		elif init_level > 3:
+			#random colors start at level 4
+			colors = list(vars(colorama.Fore).values())
+			colored_chars = [random.choice(colors) + printChar] #sourced from stackoverflow
+			print(random.choice(colors) + printChar + Style.RESET_ALL)
+			time.sleep(1) #give 1 second of viewing time before clearing screen again
+		elif init_level >= 1:
+			print(printChar)
+			time.sleep(1) #give 1 second of viewing time before clearing screen again
+
+
 		if init_level == level:
 			printMemory = printChar #(1st time), store character into variable "printMemory"
 		else: 
 			printMemory = printMemory + printChar #(after 1st time), append character to variable "printMemory"
 		
-		time.sleep(1) #give 1 second of viewing time before clearing screen again
 		clearTerminal() #clear terminal after showing character
 		time.sleep(.5)
 		level -= 1
@@ -74,11 +98,11 @@ def memoryCheck(printMemory, init_level):
 	memory_UR = input("Please input the characters in the exact order that they appeared:\n").replace(" ", "")
 
 	if memory_UR == printMemory:
-		print("\nCongrats! You've passed level", init_level,"\n\nAdvancing to level", init_level+1,"in:")
+		print(Back.GREEN + "\nCongrats! You've passed level", init_level, Style.RESET_ALL + "\n\nAdvancing to level", init_level+1,"in:")
 		countdown321()
 		memoryPrint(init_level + 1)
 	else:
-		print("I'm sorry, but you didn't remember the string correctly.\n\nThis is what you inputted:")
+		print(Back.RED + "I'm sorry, but you didn't remember the string correctly.", Style.RESET_ALL+ "\n\nThis is what you inputted:" + Style.RESET_ALL)
 		print(memory_UR)
 		print("This is what it was supposed to look like:")
 		print(printMemory)
@@ -86,6 +110,7 @@ def memoryCheck(printMemory, init_level):
 		gameRetry_UR = input("Would you like to play again?\n")
 		if gameRetry_UR == "yes" or gameRetry_UR == "yeah":
 			print("\n\nYay! Returnig to level 1...")
+			countdown321()
 			memoryPrint(1)
 		else:
 			print("\n\nThanks for playing! Have a good day.\nGAME CREATED BY: Nate Krauss '20")
