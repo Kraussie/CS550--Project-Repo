@@ -37,6 +37,7 @@ def startInstructions(error_status):
 		error_status = False
 	print("Hello! Welcome to the Game of Memory. \nThis game will test the limits to which you can remember a series of characters.\nYou will see a character printed, and each level increases in difficulty.")
 	print(Back.RED + "\n\n**NOTICE: Be careful not to input any characters before you are prompted**" + Style.RESET_ALL)
+	print("\n\nInstructions:\n> When prompted, enter the characters in the exact order they appeared\n> When inputting the string of chracters, be aware of capital/lower case letters (i.e. this game is CASE-SENSETIVE)")
 	startGame()
 
 def startGame():
@@ -95,6 +96,9 @@ def memoryPrint(level):
 # MEMORY CHECK - MEMORY GAME
 def memoryCheck(printMemory, init_level):
 	clearTerminal()
+	input("Click return when you are ready to enter the string!\n[ENTER]")
+
+	clearTerminal()
 	memory_UR = input("Please input the characters in the exact order that they appeared:\n").replace(" ", "")
 
 	if memory_UR == printMemory:
@@ -118,4 +122,22 @@ def memoryCheck(printMemory, init_level):
 # GAME START FUNCTION
 startInstructions(False)
 
+# PEER-REVIEW COMMENTS
+# I think this was really good! Definitely appropriate difficulty... I didn't make it past level 4 but from looking at your code it looks like it gets even harder.
+# The only trip-up I had was the sleep in between the beginning of the level and when "Please input..." appears. I accidentally entered the same character twice a few times.
+# Maybe I'm just stupid (probably) but even so, might be cool to make the game idiot-proof
+# - Chandler
+
+"""
+Spencer:
+I am able to type as the letters appear
+Once you enter your answer, could there be a pause for dramatic effect?
+I like the colors tho NGL
+Keep up the good work plz
+Stan:
+Cool game, I just hope it is a little easier to identify the x from the X, or o from the O.
+Kate: 
+I really like how your game is simple, but still challenging! One tiny thing I would maybe clarify in the instructions is that the answers need to be case-sensitive.
+I didn't really get that until my 3rd time around, which is definitely my fault but hey, why not? I really like the colors and how the screen clears after every round
+"""
 
