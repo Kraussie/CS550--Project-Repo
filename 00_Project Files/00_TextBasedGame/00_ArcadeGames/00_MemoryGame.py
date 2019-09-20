@@ -1,26 +1,30 @@
-# Author: Nate K
-# Date of Creation: 09/13/2019
-# Date of Last Edit: 09/16/2019
-# Text-Based Game Project
-# SOURCES: https://stackoverflow.com/questions/2823316/generate-a-random-letter-in-python
+"""
+Author: Nate K
+Date of Creation: 09/13/2019
+Date of Last Edit: 09/16/2019
+Text-Based Game Project
+SOURCES: 
+- https://stackoverflow.com/questions/2823316/generate-a-random-letter-in-python
+- https://stackoverflow.com/questions/46425645/python-make-every-character-line-random-color-print
+- https://stackoverflow.com/questions/24582233/python-flush-input-before-raw-input
 
-# On my honor, I have neither given nor received unauthorized aid.
-# Signed: NK 09/26/2019
+On my honor, I have neither given nor received unauthorized aid.
+Signed: NK 09/26/2019
 
-# I began programming this program in two different files initally.
-# I wanted to separate the initalization part of the game from the game itself in order to organize the code a lot better before combining the two. 
-# Once each stage was completed separately, I was able to seemlessly combine the two. Some debugging was needed, but after enough time, all the kinks of the program were worked out.
-
+I began programming this program in two different files initally.
+I wanted to separate the initalization part of the game from the game itself in order to organize the code a lot better before combining the two. 
+Once each stage was completed separately, I was able to seemlessly combine the two. Some debugging was needed, but after enough time, all the kinks of the program were worked out.
+"""
 # *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*
 # SETUP FUNCTIONS
-import os, string, time, random
+import os, string, time, random,sys, termios
 import colorama
 from colorama import Fore, Back, Style
 
 def clearTerminal():
 	os.system('cls' if os.name == 'nt' else 'clear') #clear terminal screen, from stackoverflow.com
 
-def countdown321():
+def countdown321(): #countdown function used many times throughout the game
 	print("3...")
 	time.sleep(1)
 	print("2...")
@@ -32,8 +36,8 @@ def countdown321():
 # GAME INITIALIZATION/INSTRUCTIONS
 def startInstructions(error_status):
 	clearTerminal()
-	if error_status == True:	
-		print(Back.RED + "ERROR: expecting 'yes' or 'yeah'\n\n" + Style.RESET_ALL)
+	if error_status == True: #if something other than yes was entered when prompted
+		print(Back.RED + "ERROR: expecting 'y' or 'yes' or 'yeah'\n\n" + Style.RESET_ALL)
 		error_status = False
 	print("Hello! Welcome to the Game of Memory. \nThis game will test the limits to which you can remember a series of characters.\nYou will see a character printed, and each level increases in difficulty.")
 	print(Back.RED + "\n\n**NOTICE: Be careful not to input any characters before you are prompted**" + Style.RESET_ALL)
@@ -42,7 +46,7 @@ def startInstructions(error_status):
 
 def startGame():
 	instructions_UR = input("\n\nAre you ready to play?\n>> ").lower()
-	if instructions_UR == "yes" or instructions_UR == "yeah":
+	if instructions_UR == "yes" or instructions_UR == "yeah" or instructions_UR == "y":
 		print("\nGame starting in:")
 		countdown321()
 		memoryPrint(1)
@@ -52,8 +56,7 @@ def startGame():
 # *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*
 # PRINT - MEMORY GAME
 def memoryPrint(level):
-	init_level = level
-	level = init_level
+	init_level = level #level variable used to print X number of letters
 	while (level > 0):
 		clearTerminal()
 		printChar = random.choice(string.ascii_letters) #print random character, from stackoverflow.com
@@ -95,9 +98,7 @@ def memoryPrint(level):
 # *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*
 # MEMORY CHECK - MEMORY GAME
 def memoryCheck(printMemory, init_level):
-	clearTerminal()
-	input("Click return when you are ready to enter the string!\n[ENTER]")
-
+	termios.tcflush(sys.stdin, termios.TCIOFLUSH)
 	clearTerminal()
 	memory_UR = input("Please input the characters in the exact order that they appeared:\n").replace(" ", "")
 
