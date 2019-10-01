@@ -21,16 +21,13 @@ print(purgedList)
 '''
  
 # 3. Write a function that will return a list of the first n numbers in the fibonacci sequence. No recursion allowed!
-'''
-COMPLETE
-
 phi = ( 1 + math.sqrt(5) ) / 2
 numberFib_UR = int(input("\n\n\nHow many values of the fibonacci sequence would you like to see?\n>>"))
 fibPrint = []
 for i in range(numberFib_UR):
 	fibPrint.append(round((((phi)**i)-((1-phi)**i)) / (math.sqrt(5))))
 print(fibPrint)
-'''
+
 
 # 4. Write some code that, given a list, will tell you if a given value is in the list. 
 '''
