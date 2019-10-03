@@ -6,7 +6,7 @@ Minesweeper Game
 SOURCES: 
 
 On my honor, I have neither given nor received unauthorized aid.
-Signed: NK 09/26/2019
+Signed: NK 10/03/2019
 
 PREREQUESITES:
 - NEED LIBRARY: "colorama"
