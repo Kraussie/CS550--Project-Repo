@@ -1,12 +1,12 @@
 """
 Author: Nate K
 Date of Creation: 10/01/2019
-Date of Last Edit: 10/02/2019
+Date of Last Edit: 10/07/2019
 Minesweeper Game
 SOURCES: 
 
 On my honor, I have neither given nor received unauthorized aid.
-Signed: NK 10/03/2019
+Signed: NK 10/07/2019
 
 PREREQUESITES:
 - NEED LIBRARY: "colorama"
@@ -19,83 +19,89 @@ How to install "colorama":
 # GAME SETUP
 import sys, random, colorama
 from colorama import Fore, Back, Style
+try:
+	# accept cmnd line arguments when running program
+	xLen = int(sys.argv[1]) + 2
+	yLen = int(sys.argv[2]) + 2
+	numBombs = int(sys.argv[3])
 
-# accept cmnd line arguments when running program
-xLen = int(sys.argv[1])
-yLen = int(sys.argv[2])
+	solBoard = [[0]*xLen for i in range(yLen)]
+	userBoard = [['█' for x in range(xLen)] for y in range(yLen)]
+except IndexError:
+	print(Back.RED+"ERROR, Please enter a valid width, height, and number of bombs"+Style.RESET_ALL)
 
-def nicePrint(listArg):
-	print('\n\n\n')
-	for i in listArg:
-		print(*i)
 
-# *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+
-# BOARD CREATION [COMPLETE]
-# 0 = no bomb in space or nearby
-def boardCreate():
-	# 1 layer buffer around playing field
-	mineBoard = [['#' for x in range(xLen+2)] for y in range(yLen+2)]
-
-	# add zeroes to field, keeping 1 layer buffer
-	for row in range(1,1+xLen):
-		for col in range(1,1+yLen):
-			mineBoard[row][col] = 0
-
-	bombAssign(mineBoard)
-
+def print_board(board):
+	print("\n\n\n")
+	for row in board[1:-1]:
+		print(*row[1:-1])
 
 # *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+
-# BOMB ASSIGNMENT [COMPLETE]
-# * = bomb in space
-def bombAssign(mineBoard):
-	#accept cmnd line argument for # of bombs
-	numBomb = int(sys.argv[3])
+# BOARD SETUP
+def boardSetup(board):
+    for i in range(numBombs):
+        x = random.randint(1, xLen-2)
+        y = random.randint(1, yLen-2)
+        while board[y][x] == '*':
+            x = random.randint(1, xLen-2)
+            y = random.randint(1, yLen-2)
+        board[y][x] = '*'
+        bombSurroundCount(x, y, board)
 
-	#loop until all bombs have been placed
-	while numBomb > 0:
-		mineBoard[random.randint(1,xLen)][random.randint(1,yLen)] = '*'
-		numBomb -= 1
-
-	bombLoop(mineBoard)
-
-
-# *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+
-# COUNT NEIGHBOR BOMBS [COMPLETE]
-def bombLoop(mineBoard):
-	#go through entire list, if item isn't '*' or '#', then check the surrounding items
-	for row in range(1,1+xLen):
-		for col in range(1,1+yLen):
-			if col != '*' and col != '#':
-				searchSurround(mineBoard, row, col)
-
-	addColor(mineBoard)
-
-def searchSurround(mineBoard,row,col):
-	#var to keep track of nearby bombs
-	bombCount = 0
-
-	#search surrounding items and assign val of # of bombs
-	for neighborRow in range(row-1,row+2):
-		for neighborCol in range(col-1,col+2):
-			if mineBoard[row][col] != '*':
-				if mineBoard[neighborRow][neighborCol] == '*':
-					bombCount += 1
-				mineBoard[row][col] = bombCount
+# *+*+*+*+*+*+*+*+*+*+*+
+# COUNT NEIGHBOR BOMBS
+def bombSurroundCount(x,y,board):
+    for r in range(y-1, y+2):
+        for c in range(x-1, x+2):
+            if board[r][c] != '*':
+                board[r][c] += 1
 
 # *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+
-# ADD COLOR TO GRID
-def addColor(mineBoard):
-	for row in range(0,2+xLen):
-		for col in range(0,2+yLen):
-			if mineBoard[row][col] == '#':
-				#dim the border of the list
-				mineBoard[row][col] = Style.DIM+'#'+Style.RESET_ALL
-			elif mineBoard[row][col] == '*':
-				#make all bombs red
-				mineBoard[row][col] = Fore.RED+'*'+Style.RESET_ALL
-	nicePrint(mineBoard)
+# ACCEPT USER INPUT
+def userGuess(solBoard, userBoard):
+	bombsFound = 0
 
+	while numBombs != bombsFound:
+		print_board(userBoard)
+
+		try:
+			urGUESS = input("\n\n\nPlease enter your guess coordinates (ex: X Y f or 0 1 g):\n>>").split(" ")
+			urXguess = int(urGUESS[1]) + 1
+			urYguess = int(urGUESS[0]) + 1
+			solXguess = urXguess
+			solYguess = urYguess
+		except IndexError:
+			print(Back.RED+"ERROR, Please enter a valid coordinate pair"+Style.RESET_ALL)
+			continue
+		except ValueError:
+			print(Back.RED+"ERROR, Please enter a valid coordinate pair"+Style.RESET_ALL)
+			continue
+
+		try:
+			if urGUESS[2] == 'f' or urGUESS[2] == 'flag':
+				if userBoard[urXguess][urYguess] == '⚐':
+					userBoard[urXguess][urYguess] = '█'
+				elif userBoard[urXguess][urYguess] != '⚐':
+					userBoard[urXguess][urYguess] = '⚐'
+			elif urGUESS[2] == 'g' or urGUESS[2] == 'guess':
+				if solBoard[solXguess][solYguess] == '*':
+					print("YOU DIED")
+					break
+				else:
+					if solBoard[solXguess][solYguess] == 0:
+						userBoard[urXguess][urYguess] = solBoard[solXguess][solYguess]
+						#display surrounding blocks
+					else:
+						userBoard[urXguess][urYguess] = solBoard[solXguess][solYguess]
+		except IndexError:
+			print(Back.RED+"ERROR, Please enter a valid coordinate pair"+Style.RESET_ALL)
+			continue
+		except ValueError:
+			print(Back.RED+"ERROR, Please enter a valid coordinate pair"+Style.RESET_ALL)
+			continue
 
 # *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+
-# START GAME
-boardCreate()
+# GAME START
+boardSetup(solBoard)
+print_board(solBoard)
+userGuess(solBoard,userBoard)
