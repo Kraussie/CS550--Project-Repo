@@ -19,7 +19,7 @@ How to install "colorama":
 """
 # *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+
 # GAME SETUP
-import sys, random, colorama
+import sys, random, colorama, os
 from colorama import Fore, Back, Style
 
 try:
@@ -37,7 +37,7 @@ except IndexError:
 
 # print board function
 def printBoard(board):
-	print("\n\n\n")
+	os.system('clear')
 	for row in board[1:-1]:
 		print(*row[1:-1])
 
@@ -74,9 +74,9 @@ def bombSurroundCount(x,y,board):
 # ACCEPT USER INPUT
 def userGuess(solBoard, userBoard):
 	# var to keep track of # of bombs found
-	bombsFound = 0
+	unopenedCells = 0
 
-	while numBombs != bombsFound:
+	while 1 == 1:
 		# display current user display board
 		printBoard(userBoard)
 
@@ -96,16 +96,32 @@ def userGuess(solBoard, userBoard):
 			# user can reveal a coordinate, if it is a bomb, they immediately die, if it isn't a bomb, then the space is revealed
 			elif urGUESS[2] == 'g' or urGUESS[2] == 'guess':
 				if solBoard[urXguess][urYguess] == '*':
-					print("YOU DIED")
+					os.system('clear')
+					print(Back.RED+"YOU DIED"+Style.RESET_ALL)
 					break
 				else:
 					# if coord selection is = 0, then continue to display surrounding blocks
 					if solBoard[urXguess][urYguess] == 0:
-						userBoard[urXguess][urYguess] = solBoard[solXguess][solYguess]
+						userBoard[urXguess][urYguess] = solBoard[urXguess][urYguess]
 						# function to display surrounding block
 					# if coord selection isn't = 0, only display that specific block
 					else:
-						userBoard[urXguess][urYguess] = solBoard[solXguess][solYguess]
+						userBoard[urXguess][urYguess] = solBoard[urXguess][urYguess]
+
+			# count # of unopened cells
+			for row in range(1, yLen-1):
+				for col in range(1, xLen-1):
+					if userBoard[row][col] == '█':
+						unopenedCells += 1
+
+			# win condition check at end of each round, if # of unopened cells is = to the number of bombs, user has won the game
+			if unopenedCells == numBombs:
+				printBoard(userBoard)
+				print("\n\n\n"+Back.GREEN+"CONGRATULATIONS! YOU WON!"+Style.RESET_ALL)
+				break
+			else:
+				# reset the number of unopened cells if win condition is not satisfied
+				unopenedCells = 0
 		# deal with error when user inputs something wrong
 		except IndexError:
 			print(Back.RED+"ERROR, Please enter a valid coordinate pair"+Style.RESET_ALL)
