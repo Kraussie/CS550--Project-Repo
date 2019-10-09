@@ -42,7 +42,10 @@ def printBoard(board):
 		print(*row[1:-1])
 
 # *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+
-# BOARD SETUP
+# GAME INTRO [IN-COMPLETE]
+
+# *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+
+# BOARD SETUP [COMPLETE]
 def boardSetup(board):
 	# randomly place bombs within playing field
     for i in range(numBombs):
@@ -62,7 +65,7 @@ def boardSetup(board):
         bombSurroundCount(x, y, board)
 
 # *+*+*+*+*+*+*+*+*+*+*+
-# COUNT NEIGHBOR BOMBS
+# COUNT NEIGHBOR BOMBS [COMPLETE]
 def bombSurroundCount(x,y,board):
 	# add 1 to all the grid areas surrounding a placed bomb
     for r in range(y-1, y+2):
@@ -71,7 +74,7 @@ def bombSurroundCount(x,y,board):
                 board[r][c] += 1
 
 # *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+
-# ACCEPT USER INPUT
+# ACCEPT USER INPUT [IN-COMPLETE]
 def userGuess(solBoard, userBoard):
 	# var to keep track of # of bombs found
 	unopenedCells = 0
