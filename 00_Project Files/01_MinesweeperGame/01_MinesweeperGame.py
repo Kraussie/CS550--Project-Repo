@@ -29,7 +29,7 @@ try:
 	numBombs = int(sys.argv[3])
 
 	# create the solution and user display boards
-	solBoard = [[0]*xLen for i in range(yLen)]
+	solBoard = [['#']*xLen for i in range(yLen)]
 	userBoard = [['█' for x in range(xLen)] for y in range(yLen)]
 except IndexError:
 	# deal with error when first running the program, likely due to forgetting the arguments or inputting arguments incorectly, sourced/researched from stackoverflow.com; Back.RED and Style.RESET_ALL changes the error text to red to make it easier to see for the user
@@ -47,31 +47,36 @@ def printBoard(board):
 # *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+
 # BOARD SETUP [COMPLETE]
 def boardSetup(board):
+	# add zeroes to field
+	for r in range(1, yLen-1):
+		for c in range(1, xLen-1):
+			board[r][c] = 0
+	
 	# randomly place bombs within playing field
-    for i in range(numBombs):
-    	# random coords selection
-        x = random.randint(1, xLen-2)
-        y = random.randint(1, yLen-2)
+	for i in range(numBombs):
+		# random coords selection
+		x = random.randint(1, xLen-2)
+		y = random.randint(1, yLen-2)
 
-        # if random coords are already a bomb, create a new set of coords
-        while board[y][x] == '*':
-            x = random.randint(1, xLen-2)
-            y = random.randint(1, yLen-2)
+		# if random coords are already a bomb, create a new set of coords
+		while board[y][x] == '*':
+			x = random.randint(1, xLen-2)
+			y = random.randint(1, yLen-2)
 
-        # change coord into a bomb
-        board[y][x] = '*'
+		# change coord into a bomb
+		board[y][x] = '*'
 
-        # continue to next function, add 1 to nearby grid areas
-        bombSurroundCount(x, y, board)
+		# continue to next function, add 1 to nearby grid areas
+		bombSurroundCount(x, y, board)
 
 # *+*+*+*+*+*+*+*+*+*+*+
 # COUNT NEIGHBOR BOMBS [COMPLETE]
 def bombSurroundCount(x,y,board):
 	# add 1 to all the grid areas surrounding a placed bomb
-    for r in range(y-1, y+2):
-        for c in range(x-1, x+2):
-            if board[r][c] != '*':
-                board[r][c] += 1
+	for r in range(y-1, y+2):
+		for c in range(x-1, x+2):
+			if board[r][c] != '*' and board[r][c] != '#':
+				board[r][c] += 1
 
 # *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+
 # ACCEPT USER INPUT [IN-COMPLETE]
@@ -87,33 +92,49 @@ def userGuess(solBoard, userBoard):
 		try:
 			# user inputs coords: example is '4 3 flag'
 			urGUESS = input("\n\n\nPlease enter your guess coordinates (ex: X Y f or 0 1 g):\n>>").split(" ")
-			urXguess = int(urGUESS[1]) + 1
-			urYguess = int(urGUESS[0]) + 1
+			urXguess = int(urGUESS[0])
+			urYguess = int(urGUESS[1])
 
 			# user can flag coordinates if they suspect a bomb is at those coords
 			if urGUESS[2] == 'f' or urGUESS[2] == 'flag':
-				if userBoard[urXguess][urYguess] == '⚐':
-					userBoard[urXguess][urYguess] = '█'
-				elif userBoard[urXguess][urYguess] != '⚐':
-					userBoard[urXguess][urYguess] = '⚐'
+				if userBoard[urYguess][urXguess] == '⚐':
+					userBoard[urYguess][urXguess] = '█'
+				elif userBoard[urYguess][urXguess] != '⚐':
+					userBoard[urYguess][urXguess] = '⚐'
 			# user can reveal a coordinate, if it is a bomb, they immediately die, if it isn't a bomb, then the space is revealed
 			elif urGUESS[2] == 'g' or urGUESS[2] == 'guess':
-				if solBoard[urXguess][urYguess] == '*':
+				if solBoard[urYguess][urXguess] == '*':
 					os.system('clear')
 					print(Back.RED+"YOU DIED"+Style.RESET_ALL)
 					break
 				else:
 					# if coord selection is = 0, then continue to display surrounding blocks
-					if solBoard[urXguess][urYguess] == 0:
-						userBoard[urXguess][urYguess] = solBoard[urXguess][urYguess]
-						# function to display surrounding block
+					if solBoard[urYguess][urXguess] == 0:
+						userBoard[urYguess][urXguess] = solBoard[urYguess][urXguess]
+						
+						# REVEAL ALL ZEROES CONNECTED TO X,Y GUESS [NEW]
+						revealLater = [[urXguess,urYguess]]
+						while len(revealLater) > 0:
+							# remove first value in revealLater list and store in 'revealCoord' var
+							revealCoord = revealLater.pop(0)
+
+							for r in range(revealCoord[0]-1, revealCoord[0]+2):
+								for c in range(revealCoord[1]-1,revealCoord[1]+2):
+									# if zero around X,Y guess = 0, add to reveal Later list
+									if solBoard[r][c] == 0 and userBoard[r][c] != solBoard[r][c] and solBoard[r][c] != '*' and solBoard != '#':
+										revealLater.append([r,c])
+										print(revealLater)
+
+									userBoard[r][c] = solBoard[r][c]
 					# if coord selection isn't = 0, only display that specific block
 					else:
-						userBoard[urXguess][urYguess] = solBoard[urXguess][urYguess]
+						userBoard[urYguess][urXguess] = solBoard[urYguess][urXguess]
 
 			# count # of unopened cells
 			for row in range(1, yLen-1):
 				for col in range(1, xLen-1):
+					if userBoard[row][col] == '⚐' and solBoard[row][col] == '*':
+						unopenedCells += 1
 					if userBoard[row][col] == '█':
 						unopenedCells += 1
 
