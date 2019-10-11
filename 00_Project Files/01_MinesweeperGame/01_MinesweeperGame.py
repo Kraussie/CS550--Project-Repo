@@ -1,11 +1,12 @@
 """
 Author: Nate K
 Date of Creation: 10/01/2019
-Date of Last Edit: 10/07/2019
+Date of Last Edit: 10/11/2019
 Minesweeper Game
 SOURCES: 
 - https://docs.python.org/3/library/sys.html
 - https://stackoverflow.com/questions/26853453/how-to-ignore-an-indexerror-on-python
+- https://stackoverflow.com/questions/24582233/python-flush-input-before-raw-input
 
 On my honor, I have neither given nor received unauthorized aid.
 Signed: NK 10/07/2019
@@ -19,7 +20,7 @@ How to install "colorama":
 """
 # *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+
 # GAME SETUP
-import sys, random, colorama, os
+import sys, random, colorama, os, time, termios
 from colorama import Fore, Back, Style
 
 try:
@@ -38,11 +39,37 @@ except IndexError:
 # print board function
 def printBoard(board):
 	os.system('clear')
-	for row in board[1:-1]:
+
+	#create new board for printing purposes, uses color
+	colorBoard = board
+	for row in range(1, yLen-1):
+		for col in range(1, xLen-1):
+			if colorBoard[row][col] == '⚐':
+				colorBoard[row][col] = Fore.RED+'⚐'+Style.RESET_ALL
+			elif colorBoard[row][col] == '█':
+				colorBoard[row][col] = Style.DIM+'█'+Style.RESET_ALL
+
+	for row in colorBoard[1:-1]:
 		print(*row[1:-1])
+
+#countdown function
+def countdown321(): 
+	print("3...")
+	time.sleep(1)
+	print("2...")
+	time.sleep(1)
+	print("1...")
+	time.sleep(1)
+	#flush user-input, sourced from stackoverflow
+	termios.tcflush(sys.stdin, termios.TCIOFLUSH)
+
 
 # *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+
 # GAME INTRO [IN-COMPLETE]
+def gameIntro():
+	os.system('clear')
+	print(Style.DIM+"*************************\n*                       *\n*      "+Style.RESET_ALL+Fore.YELLOW+"WELCOME TO:"+Style.RESET_ALL+Style.DIM+"      *\n*     "+Style.RESET_ALL+Style.BRIGHT+Fore.RED+"*MINESWEEPER*"+Style.RESET_ALL+Style.DIM+"     *\n*                       *\n*    "+Style.RESET_ALL+"BY: NATE K '20"+Style.RESET_ALL+Style.DIM+"     *\n*                       *\n*                       *\n*************************\n\n\n"+Style.RESET_ALL)
+	input("Press any button to start the game\n>>")
 
 # *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+
 # BOARD SETUP [COMPLETE]
@@ -97,9 +124,9 @@ def userGuess(solBoard, userBoard):
 
 			# user can flag coordinates if they suspect a bomb is at those coords
 			if urGUESS[2] == 'f' or urGUESS[2] == 'flag':
-				if userBoard[urYguess][urXguess] == '⚐':
+				if userBoard[urYguess][urXguess] == Fore.RED+'⚐'+Style.RESET_ALL:
 					userBoard[urYguess][urXguess] = '█'
-				elif userBoard[urYguess][urXguess] != '⚐':
+				elif userBoard[urYguess][urXguess] != Fore.RED+'⚐'+Style.RESET_ALL:
 					userBoard[urYguess][urXguess] = '⚐'
 			# user can reveal a coordinate, if it is a bomb, they immediately die, if it isn't a bomb, then the space is revealed
 			elif urGUESS[2] == 'g' or urGUESS[2] == 'guess':
@@ -113,7 +140,7 @@ def userGuess(solBoard, userBoard):
 						userBoard[urYguess][urXguess] = solBoard[urYguess][urXguess]
 						
 						# REVEAL ALL ZEROES CONNECTED TO X,Y GUESS [NEW]
-						revealLater = [[urXguess,urYguess]]
+						revealLater = [[urYguess,urXguess]]
 						while len(revealLater) > 0:
 							# remove first value in revealLater list and store in 'revealCoord' var
 							revealCoord = revealLater.pop(0)
@@ -123,7 +150,6 @@ def userGuess(solBoard, userBoard):
 									# if zero around X,Y guess = 0, add to reveal Later list
 									if solBoard[r][c] == 0 and userBoard[r][c] != solBoard[r][c] and solBoard[r][c] != '*' and solBoard != '#':
 										revealLater.append([r,c])
-										print(revealLater)
 
 									userBoard[r][c] = solBoard[r][c]
 					# if coord selection isn't = 0, only display that specific block
@@ -135,7 +161,7 @@ def userGuess(solBoard, userBoard):
 				for col in range(1, xLen-1):
 					if userBoard[row][col] == '⚐' and solBoard[row][col] == '*':
 						unopenedCells += 1
-					if userBoard[row][col] == '█':
+					if userBoard[row][col] == Style.DIM+'█'+Style.RESET_ALL:
 						unopenedCells += 1
 
 			# win condition check at end of each round, if # of unopened cells is = to the number of bombs, user has won the game
@@ -148,14 +174,17 @@ def userGuess(solBoard, userBoard):
 				unopenedCells = 0
 		# deal with error when user inputs something wrong
 		except IndexError:
-			print(Back.RED+"ERROR, Please enter a valid coordinate pair"+Style.RESET_ALL)
+			print(Back.RED+"ERROR, Please enter a valid coordinate pair"+Style.RESET_ALL+"\nReturning to game in:")
+			countdown321()
 			continue
 		except ValueError:
-			print(Back.RED+"ERROR, Please enter a valid coordinate pair"+Style.RESET_ALL)
+			print(Back.RED+"ERROR, Please enter a valid coordinate pair"+Style.RESET_ALL+"\nReturning to game in:")
+			countdown321()
 			continue
 
 # *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+
 # GAME START
+gameIntro()
 boardSetup(solBoard)
 printBoard(solBoard) # temporary function to debug when needed
 userGuess(solBoard,userBoard)
