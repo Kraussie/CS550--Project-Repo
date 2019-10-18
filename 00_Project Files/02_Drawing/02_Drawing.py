@@ -11,20 +11,39 @@
 from PIL import Image, ImageEnhance
 import random
 
-dimx = 4000
-dimy = 4000
+dimx = 400
+dimy = 400
 
 file = Image.new("RGB",(dimx,dimy))
 
-counter = 0
+file.save("demo_image.png","PNG")
 
+'''
+lines = 100
+
+while lines > 0:
+	red = random.randint(0,255)
+	green = random.randint(0,255)
+	blue = random.randint(0,255)
+	initX = random.randint(10,90)
+
+	for y in range(0,300):
+		file.putpixel((initX,y),(red,green,blue))
+		initX += random.randint(-1,1)
+	lines -= 1
+
+file.save("demo_image.png","PNG")
+'''
+
+
+'''
 for x in range(0,4000):
 	for y in range(0,4000):
 		file.putpixel((x,y),(random.randint(0,255),random.randint(0,255),random.randint(0,255)))
 		counter+=1
 		print("COMPLETED:", (counter/160000), "%")
 		file.save("demo_image.png","PNG")
-
+'''
 
 '''
 #RED:
