@@ -11,12 +11,22 @@
 from PIL import Image, ImageEnhance
 import random
 
-dimx = 400
-dimy = 400
+dimx = 800
+dimy = 800
 
 file = Image.new("RGB",(dimx,dimy))
 
-file.save("demo_image.png","PNG")
+curtisImg = Image.open("sm-DrAlexCurtis.jpg")
+contrast = ImageEnhance.Contrast(curtisImg)
+contrastFin = contrast.enhance(1)
+sharpness = ImageEnhance.Sharpness(contrastFin)
+sharpnessFin = sharpness.enhance(100)
+brightness = ImageEnhance.Brightness(sharpnessFin)
+brightnessFin = brightness.enhance(1)
+color = ImageEnhance.Color(brightnessFin)
+color.enhance(1).show()
+
+
 
 '''
 lines = 100
@@ -49,8 +59,8 @@ for x in range(0,4000):
 #RED:
 #X = 0, 100, 200, 300, 400, 500
 #Y = 0, 100, 
-for x in list(range(100,200)) + list(range(300,400)) + list(range(500,600)) + list(range(700,800)):
-	for y in list(range(0,100)) + list(range(200,300)) + list(range(400,500)) + list(range(600,700)):
+for x in list(range(100,200)) + list(range(300,400)) + list(range(525,575)) + list(range(700,800)):
+	for y in list(range(0,50)) + list(range(200,300)) + list(range(425,475)) + list(range(600,700)):
 		file.putpixel((x,y),(255,0,0))
 
 for x in list(range(0,100)) + list(range(200,300)) + list(range(400,500)) + list(range(600,700)):
@@ -75,3 +85,5 @@ for x in range(10,91):
 	for y in range(45,91):
 		file.putpixel((x,y),(255,255,0))
 '''
+
+file.save("demo_image.png","PNG")
