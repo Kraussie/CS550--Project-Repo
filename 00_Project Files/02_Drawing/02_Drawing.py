@@ -15,7 +15,29 @@ dimx = 800
 dimy = 800
 
 file = Image.new("RGB",(dimx,dimy))
+counter = 0
+red = random.randint(0,255)
+blue = random.randint(0,255)
+green = random.randint(0,255)
 
+for x in range(0,800):
+	for y in range(0,800):
+		colorRand = random.randint(0,3)
+
+		if colorRand == 0:
+			red += random.randint(-25,25)
+		elif colorRand == 1:
+			green += random.randint(-25,25)
+		elif colorRand == 2:
+			blue += random.randint(-25,25)
+
+		file.putpixel((x,y),(red,green,blue))
+		counter+=1
+		print("COMPLETED:", (counter/6400), "%")
+
+file.save("demo_image.png","PNG")
+
+'''
 curtisImg = Image.open("sm-DrAlexCurtis.jpg")
 contrast = ImageEnhance.Contrast(curtisImg)
 contrastFin = contrast.enhance(1)
@@ -25,7 +47,7 @@ brightness = ImageEnhance.Brightness(sharpnessFin)
 brightnessFin = brightness.enhance(1)
 color = ImageEnhance.Color(brightnessFin)
 color.enhance(1).show()
-
+'''
 
 
 '''
@@ -85,5 +107,3 @@ for x in range(10,91):
 	for y in range(45,91):
 		file.putpixel((x,y),(255,255,0))
 '''
-
-file.save("demo_image.png","PNG")

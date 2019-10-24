@@ -9,10 +9,12 @@
 # *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*
 
 def mandelbrot(cx,cy):
+	#z[0]=x, z[1]=y
 	z = [0,0]
 	zCheck = 0
 	passCount = 0
-	while  zCheck <= 2 and passCount < 4:
+
+	while  zCheck <= 2 and passCount < 80:
 		z = [(z[0]*z[0] + cx),(z[1]*z[1] + cy)]
 
 		zCheck = z[0]*z[0] + z[1]*z[1]
@@ -22,5 +24,8 @@ def mandelbrot(cx,cy):
 
 constX = float(input("\n\n\nplease enter the x value\n>>"))
 constY = float(input("\n\n\nplease enter the y value\n>>"))
-
-print(mandelbrot(constX, constY))
+iterations = mandelbrot(constX, constY)
+if iterations == 80:
+	print("the inputted values iterate infinitely")
+else:
+	print("number of iterations:", iterations)
