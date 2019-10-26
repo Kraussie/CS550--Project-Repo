@@ -14,7 +14,7 @@ def mandelbrot(c, z=complex(0,0), count=0):
 	return mandelbrot(c,z,count)
 
 def pixelPlace(mandelSave,x,y):
-	pixelTransX, pixelTransY = int(numpy.interp(x,[-2,2],[0,1000])), int(numpy.interp(y,[-2,2],[0,1000]))
+	pixelTransX, pixelTransY = int(numpy.interp(x,[-2,2],[0,dimx])), int(numpy.interp(y,[-2,2],[0,dimy]))
 	pixelColor = int(numpy.interp(mandelSave,[0,maxIterations],[0,255]))
 	print(pixelColor,pixelTransX,pixelTransY)
 	try:
