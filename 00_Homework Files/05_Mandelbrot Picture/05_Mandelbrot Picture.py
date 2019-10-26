@@ -1,3 +1,19 @@
+# Author: Nate K
+# Date of Creation: 10/25/2019
+# Date of Last Edit: 10/26/2019
+# Mandelbrot Function Picture
+# SOURCES: 
+#- https://docs.scipy.org/doc/numpy/reference/generated/numpy.interp.html
+
+#PREREQUESITES:
+#- NEED LIBRARY: "numpy"
+
+#How to install "numpy":
+#- CMND IN TERMINAL: "pip3 install numpy"
+
+# On my honor, I have neither given nor received unauthorized aid.
+# Signed: NK 10/26/2019
+# *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*
 from PIL import Image
 import numpy
 
