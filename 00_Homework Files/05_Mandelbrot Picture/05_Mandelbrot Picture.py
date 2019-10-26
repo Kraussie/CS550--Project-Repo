@@ -13,23 +13,24 @@ def mandelbrot(c, z=complex(0,0), count=0):
 		return count
 	return mandelbrot(c,z,count)
 
-def pixelPlace(mandelSave,count=0):
-	for x in range(0,dimx):
-		for y in range(0,dimy):
-			for pixelVal in range(0,dimx*dimy):
-				pixelColor = int(numpy.interp(mandelSave[pixelVal],[0,maxIterations],[0,255]))
-				mPic.putpixel((x,y),(pixelColor,pixelColor,pixelColor))
-				count+=1
-				print(count)
+def pixelPlace(mandelSave,x,y):
+	pixelTransX, pixelTransY = int(numpy.interp(x,[-2,2],[0,1000])), int(numpy.interp(y,[-2,2],[0,1000]))
+	pixelColor = int(numpy.interp(mandelSave,[0,maxIterations],[0,255]))
+	print(pixelColor,pixelTransX,pixelTransY)
+	try:
+		mPic.putpixel((pixelTransX,pixelTransY),(pixelColor,pixelColor,pixelColor))
+	except IndexError:
+		print("oopsie")
 
-maxIterations = 3
-mandelSave = []
-
-def mandelFunc():
+def mandelFunc(count=0):
 	for x in numpy.linspace(-2,2,dimx):
 		for y in numpy.linspace(-2,2,dimy):
-			mandelSave.append(mandelbrot(complex(x,y)))
-	pixelPlace(mandelSave)
+			pixelPlace(mandelbrot(complex(x,y)),x,y)
+			count += 1
+			print(count, x, y)
+
+
+maxIterations = 100
 
 mandelFunc()
 mPic.save("demo_image.png","PNG")
