@@ -46,7 +46,7 @@ def mandelFunc(count=0):
 			print(count, x, y)
 
 
-maxIterations = 100
+maxIterations = 255
 
 mandelFunc()
 mPic.save("demo_image.png","PNG")
