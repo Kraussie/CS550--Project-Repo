@@ -1,6 +1,6 @@
 # Author: Nate K
 # Date of Creation: 10/31/2019
-# Date of Last Edit: 11/XX/2019
+# Date of Last Edit: 11/03/2019
 # Mandelbrot Set and Fractals
 # SOURCES/USEFUL LINKS:
 # https://www.atopon.org/mandel/# 
@@ -13,7 +13,7 @@
 #- CMND IN TERMINAL: "pip3 install progressbar2"
 
 # On my honor, I have neither given nor received unauthorized aid.
-# Signed: NK 10/26/2019
+# Signed: NK 11/04/2019
 # *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*
 # PROGRAM SETUP
 from PIL import Image
@@ -27,12 +27,12 @@ print("FRACTAL IMAGE RENDERING:")
 
 # *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*
 # PROGRAM FUNCTIONS
-def mandelbrot(c, z=complex(0,0), count=0):
-	z = z**2 + c
+def mandelbrot(c, power=2, z=complex(0,0), count=0):
+	z = z**power + c
 	count += 1
 	if abs(z) >= 2 or count > maxIterations:
 		return count
-	return mandelbrot(c,z,count)
+	return mandelbrot(c,power,z,count)
 
 # *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*
 # IMAGE 1 RUN
@@ -54,12 +54,15 @@ for y in bar(range(imgy)):
 	for x in range(imgx):
 		cx = ((xmax-xmin)/imgx)*x + xmin
 		c = complex(cx,cy)
-		r = (((mandelbrot(c)+1)//6)**2)
+		fractResult = mandelbrot(c)
+
+		r = (((fractResult+1)//6)**2)
 		g = 0
-		b = (mandelbrot(c)*50)%256
+		b = (fractResult*50)%256
 		image1.putpixel((x,y),(r,g,b))
 
 images.append(image1)
+
 
 # *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*
 # IMAGE 2 RUN
@@ -81,15 +84,17 @@ for y in bar(range(imgy)):
 	for x in range(imgx):
 		cx = ((xmax-xmin)/imgx)*x + xmin
 		c = complex(cx,cy)
-		if mandelbrot(c) > 14:
-			r = int((mandelbrot(c)**2)/2)
-			g = int((mandelbrot(c)**2)/2) 
+		fractResult = mandelbrot(c)
+
+		if fractResult > 14:
+			r = int((fractResult**2)/2)
+			g = int((fractResult**2)/2) 
 			b = 0
-		elif mandelbrot(c) > 9:
-			r = int(((mandelbrot(c))**3)/20)
-			g = int(((mandelbrot(c))**3)/20)
-			b = int(((mandelbrot(c))**2.1)/2.5)
-		elif mandelbrot(c) > 7:
+		elif fractResult > 9:
+			r = int((fractResult**3)/20)
+			g = int((fractResult**3)/20)
+			b = int((fractResult**2.1)/2.5)
+		elif fractResult > 7:
 			r = 0
 			g = 0
 			b = 0
@@ -103,9 +108,35 @@ images.append(image2)
 
 # *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*
 # IMAGE 3 RUN
+'''
+I essentially chose this fractal because I liked the symmetrical pattern it created. After playing around with the colors for awhile, I figured out an equation that created a really awesome silhouette effect with the fractal. From there I continued to play around with the exact colors, proportions, and brightness. 
+'''
+maxIterations = 255
+imgx,imgy = 1000,1000
+xmin = -1
+xmax = 1
+ymin = -1
+ymax = 1
+
+image3 = Image.new("RGB",(imgx,imgy))
+
+print("\n\n\nIMAGE 3 PROGRESS:")
+for y in bar(range(imgy)):
+	cy = ((ymax-ymin)/imgy)*y + ymin
+	for x in range(imgx):
+		cx = ((xmax-xmin)/imgx)*x + xmin
+		c = complex(cx,cy)
+		fractResult = mandelbrot(c, 5)
+		r = int(((int(fractResult**2.25))%256)*1.25)
+		g = int(((int(fractResult**2.25))%256)*0.6) #*0.6 creates the orange in combination with the red
+		b = 0
+
+		image3.putpixel((x,y),(r,g,b))
+
+images.append(image3)
 
 # *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*
-# IMAGE COMBINE
+# IMAGE COMBINE/SAVE
 offsetX = 0
 imgx, imgy = (len(images) * 1000), 1000
 fullImg = Image.new("RGB",(imgx,imgy))
@@ -115,6 +146,9 @@ for im in images:
   fullImg.paste(im, (offsetX,0))
   offsetX += 1000
 
-print("\n\n\nCheck the currently active directory for a file labled 'nkrauss_combinedImg.png'")
+print("\n\n\nCheck the currently active directory for a file labled 'nkrauss_combinedImg.png' and other files")
+image1.save("nkrauss_image1.png","PNG")
+image2.save("nkrauss_image2.png","PNG")
+image3.save("nkrauss_image3.png","PNG")
 fullImg.save("nkrauss_combinedImg.png","PNG")
 fullImg.show()
