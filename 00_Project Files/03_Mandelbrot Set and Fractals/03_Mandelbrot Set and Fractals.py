@@ -152,3 +152,8 @@ image2.save("nkrauss_image2.png","PNG")
 image3.save("nkrauss_image3.png","PNG")
 fullImg.save("nkrauss_combinedImg.png","PNG")
 fullImg.show()
+
+'''
+PEER REVIEW COMMENTS
+Roshni - image 1 has cool colors and results in a color with complimentary colors, image 2 looks like a lightning bolt hitting the ground-great imagery, image 3 has cool symmetry and a great red effect around the actual mandelbrot
+'''
