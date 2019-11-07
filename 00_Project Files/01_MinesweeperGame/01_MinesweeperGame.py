@@ -59,7 +59,7 @@ def countdown321():
 # GAME INTRO [IN-COMPLETE]
 def gameIntro():
 	os.system('clear')
-	print(Style.DIM+"*************************\n*                       *\n*      "+Style.RESET_ALL+Fore.YELLOW+"WELCOME TO:"+Style.RESET_ALL+Style.DIM+"      *\n*     "+Style.RESET_ALL+Style.BRIGHT+Fore.RED+"*MINESWEEPER*"+Style.RESET_ALL+Style.DIM+"     *\n*                       *\n*    "+Style.RESET_ALL+"BY: NATE K '20"+Style.RESET_ALL+Style.DIM+"     *\n*                       *\n*                       *\n*************************\n\n\n"+Style.RESET_ALL)
+	print(Style.DIM+"*******************************\n*                             *\n*           "+Style.RESET_ALL+Fore.YELLOW+"WELCOME"+Style.RESET_ALL+Style.DIM+"           *\n*             "+Style.RESET_ALL+Style.BRIGHT+Fore.RED+"TO"+Style.RESET_ALL+Style.DIM+"              *\n*        "++Style.RESET_ALL+"BY: NATE K '20"+Style.RESET_ALL+Style.DIM+"     *\n*                       *\n*                       *\n*************************\n\n\n"+Style.RESET_ALL)
 	input("Press [enter] to start the game\n>> ")
 
 # *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+
