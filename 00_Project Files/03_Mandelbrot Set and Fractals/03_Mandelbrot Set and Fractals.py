@@ -21,6 +21,8 @@ from progressbar import progressbar as bar
 import os
 
 images = []
+# saves the start time of the program
+startTime = time.time()
 
 os.system('clear')
 print("FRACTAL IMAGE RENDERING:")
@@ -152,6 +154,18 @@ image2.save("nkrauss_image2.png","PNG")
 image3.save("nkrauss_image3.png","PNG")
 fullImg.save("nkrauss_combinedImg.png","PNG")
 fullImg.show()
+
+# *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*
+# RUN TIME CALCULATION
+
+#saves the end time of the program
+endTime = time.time()
+#calculates total time elapsed
+totalTime = endTime - startTime
+#translate total time into minutes and seconds
+totalTimeMin = int(totalTime//60)
+totalTimeSec = totalTime%60
+print("PROGRAM RUN-TIME:", totalTimeMin, "Minutes and", totalTimeSec, "Seconds")
 
 '''
 PEER REVIEW COMMENTS

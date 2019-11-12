@@ -13,49 +13,187 @@
 # On my honor, I have neither given nor received unauthorized aid.
 # Signed: NK 11/20/2019
 # *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*
-# GAME SETUP/UNIVERSAL FUNCTIONS
-import random, os
-from colorama import Fore, Back, Style
+# PROGRAM SETUP
+from PIL import Image
+from progressbar import progressbar as bar
+import os, time
 
-def clearTerminal():
-	#clear terminal screen, from stackoverflow.com
-	os.system('cls' if os.name == 'nt' else 'clear')
+images = []
 
-def enterContinue(nextSection):
-	if nextSection == 0:
-		input("\n\n>> Click [enter] to continue")
-	else:
-		input(print("\n\n>> Click [enter] to continue to the", nextSection,"\n>> "))
+# saves the start time of the program
+startTime = time.time()
+
+os.system('clear')
+print("FRACTAL IMAGE RENDERING:")
+
 # *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*
-# GAME INTRO SCREEN
-def gameWelcome():
-	clearTerminal()
-	print(Style.DIM+"*******************************\n*                             *\n*           "+Style.RESET_ALL+Fore.YELLOW+"WELCOME"+Style.RESET_ALL+Style.DIM+"           *\n*             "+Style.RESET_ALL+Fore.YELLOW+"TO"+Style.RESET_ALL+Style.DIM+"              *\n*        "+Style.RESET_ALL+Fore.YELLOW+"THE LONE WOLF"+Style.RESET_ALL+Style.DIM+"        *\n*                             *\n*         "+Style.RESET_ALL+"CREATED BY:"+Style.DIM+"         *\n*       "+Style.RESET_ALL+"NATE KRAUSS'20"+Style.DIM+"        *\n*                             *\n*******************************"+Style.RESET_ALL)
-	enterContinue("Game Introduction")
+# PROGRAM FUNCTIONS
+def mandelbrot(c, power=2, z=complex(0,0), count=0):
+	z = z**power + c
+	count += 1
+	if abs(z) >= 2 or count > maxIterations:
+		return count
+	return mandelbrot(c,power,z,count)
 
-def storyIntro():
-	clearTerminal()
-	storyIntroText = open("StorySoFar.txt","r")
-	print(storyIntroText.read())
-	enterContinue("Game Rules")
-	storyRules()
+class newComplex:
+	#initialization of class arguments, re = x, im = y * i
+	def __init__(self, re, im):
+		self.re = re
+		self.im = im
 
-def storyRules():
-	clearTerminal()
-	print("You keep a record of your adventure on the Action Chart.")
-	enterContinue("Action Chart Selection")
+	#custom addition function
+	def __add__(self, other):
+		self.re += other.re
+		self.im += other.im
 
-	#COMBAT AND ENDURANCE SKILL SELECTION
-	print("During your training as a Kai Lord you have developed fighting prowess — COMBAT SKILL and physical stamina — ENDURANCE. Before you set off on your adventure you need to measure how effective your training has been.")
-	enterContinue(0)
-	cSkill = random.randint(1,9) + 10 # combat skill
-	eSkill = random.randint(1,9) + 20 # endurance skill
-	print("You're combat skill and endurance have been randomly chosen to be:\n[COMBAT SKILL] =", cSkill,"\n[ENDURANCE] =", eSkill)
-	enterContinue(0)
-	print("If you are wounded in combat you will lose ENDURANCE points. If at any time your ENDURANCE points fall to zero or below, you are dead and the adventure is over. Lost ENDURANCE points can be regained during the course of the adventure, but your number of ENDURANCE points can never go above the number with which you start your adventure.")
-	enterContinue(0)
+	#custom multiplication function
+	def __mul__(self, other):
+		self.re = self.re * other.re
+		self.im = self.im * other.im
 
-	#KAI DISCIPLINES
-	print("Over the centuries, the Kai monks have mastered the skills of the warrior. These skills are known as the Kai Disciplines, and they are taught to all Kai Lords. You have learnt only five of the skills listed below. The choice of which five skills these are, is for you to make. As all of the Disciplines may be of use to you at some point on your perilous quest, pick your five with care. The correct use of a Discipline at the right time can save your life.\n\n You may choose 5 Disciplines")
+	#custom power function
+	def __pow__(self, other):
+		self.re = self.re**other
+		self.im = self.im**other
 
-gameWelcome()
+	#custom absolute value function
+	def __abs__(self):
+
+	#custom string representation
+	def __str__(self):
+
+# *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*
+# IMAGE 1 RUN
+'''
+I wanted this image to represent a lively city and the connected highways that branch off from large cities like New York. The red/pink point to the highways that are constantly lit up, and the large concentrations of red/pink are example of small/large cities. At the top of the image, there is a smaller city while in the direct center, there is a large city.
+'''
+maxIterations = 255
+imgx,imgy = 1000,1000
+xmin = -0.1151953125
+xmax = -0.0962109375
+ymin = -0.935302734375
+ymax = -0.916318359375
+
+image1 =  Image.new("RGB",(imgx,imgy))
+
+print("\n\n\nIMAGE 1 PROGRESS:")
+for y in bar(range(imgy)):
+	cy = ((ymax-ymin)/imgy)*y + ymin
+	for x in range(imgx):
+		cx = ((xmax-xmin)/imgx)*x + xmin
+		c = complex(cx,cy)
+		fractResult = mandelbrot(c)
+
+		r = (((fractResult+1)//6)**2)
+		g = 0
+		b = (fractResult*50)%256
+		image1.putpixel((x,y),(r,g,b))
+
+images.append(image1)
+
+
+# *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*
+# IMAGE 2 RUN
+'''
+While exploring the mandelbrot fractal, I noticed that there were a few parts of the fractal that resembled a lightning bolt. That's pretty much what I wanted to show with this image, but I wanted to go a bit further by using if/elif functions to colorcode different parts of the image. 
+'''
+maxIterations = 255
+imgx,imgy = 1000,1000
+xmin = -0.1594882621765136
+xmax = -0.1537981567382812
+ymin = -1.1101653785705567
+ymax = -1.1158554840087893
+
+image2 = Image.new("RGB",(imgx,imgy))
+
+print("\n\n\nIMAGE 2 PROGRESS:")
+for y in bar(range(imgy)):
+	cy = ((ymax-ymin)/imgy)*y + ymin
+	for x in range(imgx):
+		cx = ((xmax-xmin)/imgx)*x + xmin
+		c = complex(cx,cy)
+		fractResult = mandelbrot(c)
+
+		if fractResult > 14:
+			r = int((fractResult**2)/2)
+			g = int((fractResult**2)/2) 
+			b = 0
+		elif fractResult > 9:
+			r = int((fractResult**3)/20)
+			g = int((fractResult**3)/20)
+			b = int((fractResult**2.1)/2.5)
+		elif fractResult > 7:
+			r = 0
+			g = 0
+			b = 0
+		else:
+			r = 0
+			g = mandelbrot(c)*15
+			b = 0
+		image2.putpixel((x,y),(r,g,b))
+
+images.append(image2)
+
+# *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*
+# IMAGE 3 RUN
+'''
+I essentially chose this fractal because I liked the symmetrical pattern it created. After playing around with the colors for awhile, I figured out an equation that created a really awesome silhouette effect with the fractal. From there I continued to play around with the exact colors, proportions, and brightness. 
+'''
+maxIterations = 255
+imgx,imgy = 1000,1000
+xmin = -1
+xmax = 1
+ymin = -1
+ymax = 1
+
+image3 = Image.new("RGB",(imgx,imgy))
+
+print("\n\n\nIMAGE 3 PROGRESS:")
+for y in bar(range(imgy)):
+	cy = ((ymax-ymin)/imgy)*y + ymin
+	for x in range(imgx):
+		cx = ((xmax-xmin)/imgx)*x + xmin
+		c = complex(cx,cy)
+		fractResult = mandelbrot(c, 5)
+		r = int(((int(fractResult**2.25))%256)*1.25)
+		g = int(((int(fractResult**2.25))%256)*0.6) #*0.6 creates the orange in combination with the red
+		b = 0
+
+		image3.putpixel((x,y),(r,g,b))
+
+images.append(image3)
+
+# *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*
+# IMAGE COMBINE/SAVE
+offsetX = 0
+imgx, imgy = (len(images) * 1000), 1000
+fullImg = Image.new("RGB",(imgx,imgy))
+
+# sourced from stackoverflow.com
+for im in images:
+  fullImg.paste(im, (offsetX,0))
+  offsetX += 1000
+
+print("\n\n\nCheck the currently active directory for a file labled 'nkrauss_combinedImg.png' and other files")
+image1.save("nkrauss_image1.png","PNG")
+image2.save("nkrauss_image2.png","PNG")
+image3.save("nkrauss_image3.png","PNG")
+fullImg.save("nkrauss_combinedImg.png","PNG")
+fullImg.show()
+
+# *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*
+# RUN TIME CALCULATION
+
+#saves the end time of the program
+endTime = time.time()
+#calculates total time elapsed
+totalTime = endTime - startTime
+#translate total time into minutes and seconds
+totalTimeMin = int(totalTime//60)
+totalTimeSec = totalTime%60
+print("PROGRAM RUN-TIME:", totalTimeMin, "Minutes and", totalTimeSec, "Seconds")
+
+'''
+PEER REVIEW COMMENTS
+Roshni - image 1 has cool colors and results in a color with complimentary colors, image 2 looks like a lightning bolt hitting the ground-great imagery, image 3 has cool symmetry and a great red effect around the actual mandelbrot
+'''
