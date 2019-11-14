@@ -16,7 +16,7 @@
 # PROGRAM SETUP
 from PIL import Image
 from progressbar import progressbar as bar
-import os, time
+import os, time, math
 
 images = []
 
@@ -28,39 +28,45 @@ print("FRACTAL IMAGE RENDERING:")
 
 # *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*
 # PROGRAM FUNCTIONS
-def mandelbrot(c, power=2, z=complex(0,0), count=0):
-	z = z**power + c
-	count += 1
-	if abs(z) >= 2 or count > maxIterations:
-		return count
-	return mandelbrot(c,power,z,count)
 
-class newComplex:
+class Complex:
 	#initialization of class arguments, re = x, im = y * i
 	def __init__(self, re, im):
 		self.re = re
 		self.im = im
 
-	#custom addition function
+	#custom addition/subtraction function
 	def __add__(self, other):
-		self.re += other.re
-		self.im += other.im
+		return Complex(self.re + other.re, self.im + other.im)
+
+	def __sub__(self,other):
+		return Complex(self.re - other.re, self.im - other.im)
 
 	#custom multiplication function
 	def __mul__(self, other):
-		self.re = self.re * other.re
-		self.im = self.im * other.im
+    	mulRE1 = self.re * other.re
+    	mulRE2 = self.im * other.im
+    	mulIM1 = self.re * other.im
+    	mulIM2 = self.im * other.re
+		return Complex(mulRE1 - mulRE2, mulIM1 + mulIM2)
 
 	#custom power function
 	def __pow__(self, other):
-		self.re = self.re**other
-		self.im = self.im**other
+		return Complex(self.re**other,self.im**other)
 
 	#custom absolute value function
 	def __abs__(self):
+		return math.hypot(self.re, self.im)
 
 	#custom string representation
-	def __str__(self):
+	#def __str__(self):
+
+def mandelbrot(c, power=2, z=Complex(0,0), count=0):
+	z = z**power + c
+	count += 1
+	if abs(z) >= 2 or count > maxIterations:
+		return count
+	return mandelbrot(c,power,z,count)
 
 # *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*
 # IMAGE 1 RUN
@@ -81,7 +87,7 @@ for y in bar(range(imgy)):
 	cy = ((ymax-ymin)/imgy)*y + ymin
 	for x in range(imgx):
 		cx = ((xmax-xmin)/imgx)*x + xmin
-		c = complex(cx,cy)
+		c = Complex(cx,cy)
 		fractResult = mandelbrot(c)
 
 		r = (((fractResult+1)//6)**2)
@@ -97,6 +103,7 @@ images.append(image1)
 '''
 While exploring the mandelbrot fractal, I noticed that there were a few parts of the fractal that resembled a lightning bolt. That's pretty much what I wanted to show with this image, but I wanted to go a bit further by using if/elif functions to colorcode different parts of the image. 
 '''
+'''
 maxIterations = 255
 imgx,imgy = 1000,1000
 xmin = -0.1594882621765136
@@ -111,7 +118,7 @@ for y in bar(range(imgy)):
 	cy = ((ymax-ymin)/imgy)*y + ymin
 	for x in range(imgx):
 		cx = ((xmax-xmin)/imgx)*x + xmin
-		c = complex(cx,cy)
+		c = Complex(cx,cy)
 		fractResult = mandelbrot(c)
 
 		if fractResult > 14:
@@ -133,11 +140,12 @@ for y in bar(range(imgy)):
 		image2.putpixel((x,y),(r,g,b))
 
 images.append(image2)
-
+'''
 # *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*
 # IMAGE 3 RUN
 '''
 I essentially chose this fractal because I liked the symmetrical pattern it created. After playing around with the colors for awhile, I figured out an equation that created a really awesome silhouette effect with the fractal. From there I continued to play around with the exact colors, proportions, and brightness. 
+'''
 '''
 maxIterations = 255
 imgx,imgy = 1000,1000
@@ -153,7 +161,7 @@ for y in bar(range(imgy)):
 	cy = ((ymax-ymin)/imgy)*y + ymin
 	for x in range(imgx):
 		cx = ((xmax-xmin)/imgx)*x + xmin
-		c = complex(cx,cy)
+		c = Complex(cx,cy)
 		fractResult = mandelbrot(c, 5)
 		r = int(((int(fractResult**2.25))%256)*1.25)
 		g = int(((int(fractResult**2.25))%256)*0.6) #*0.6 creates the orange in combination with the red
@@ -162,7 +170,7 @@ for y in bar(range(imgy)):
 		image3.putpixel((x,y),(r,g,b))
 
 images.append(image3)
-
+'''
 # *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*
 # IMAGE COMBINE/SAVE
 offsetX = 0
@@ -176,8 +184,8 @@ for im in images:
 
 print("\n\n\nCheck the currently active directory for a file labled 'nkrauss_combinedImg.png' and other files")
 image1.save("nkrauss_image1.png","PNG")
-image2.save("nkrauss_image2.png","PNG")
-image3.save("nkrauss_image3.png","PNG")
+#image2.save("nkrauss_image2.png","PNG")
+#image3.save("nkrauss_image3.png","PNG")
 fullImg.save("nkrauss_combinedImg.png","PNG")
 fullImg.show()
 
