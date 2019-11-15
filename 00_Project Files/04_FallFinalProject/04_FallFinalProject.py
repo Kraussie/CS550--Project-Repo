@@ -20,7 +20,7 @@ print("FRACTAL IMAGE RENDERING:")
 # *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*
 # PROGRAM FUNCTIONS
 
-class Complex:
+class newComplex:
 	#initialization of class arguments, re = x, im = y * i
 	def __init__(self, re, im):
 		self.re = re
@@ -29,7 +29,7 @@ class Complex:
 	#custom addition/subtraction function, sourced from:
 	#https://www2.clarku.edu/faculty/djoyce/complex/plane.html
 	def __add__(self, other):
-		return Complex(self.re + other.re, self.im + other.im)
+		return newComplex(self.re + other.re, self.im + other.im)
 
 	#custom multiplication function, equation sourced from:
 	#https://www2.clarku.edu/faculty/djoyce/complex/mult.html
@@ -38,7 +38,7 @@ class Complex:
 		mulRE2 = self.im * other.im
 		mulIM1 = self.re * other.im
 		mulIM2 = self.im * other.re
-		return Complex(mulRE1 - mulRE2, mulIM1 + mulIM2)
+		return newComplex(mulRE1 - mulRE2, mulIM1 + mulIM2)
 
 	#custom power function, will multiply itself as many times as specificied by the other variable
 	def __pow__(self, other):
@@ -59,7 +59,14 @@ class Complex:
 		result += "i"
 		return result
 
-def mandelbrot(c, power=2, z=Complex(0,0), count=0):
+def mandelbrotNew(c, power=2, z=newComplex(0,0), count=0):
+	z = z**power + c
+	count += 1
+	if abs(z) >= 2 or count > maxIterations:
+		return count
+	return mandelbrot(c,power,z,count)
+
+def mandelbrot(c, power=2, z=complex(0,0), count=0):
 	z = z**power + c
 	count += 1
 	if abs(z) >= 2 or count > maxIterations:
@@ -88,13 +95,13 @@ ymax = -0.916318359375
 
 image1 =  Image.new("RGB",(imgx,imgy))
 
-print("\n\n\nIMAGE 1 PROGRESS:")
+print("\n\n\nIMAGE 1 [custom complex] PROGRESS:")
 for y in bar(range(imgy)):
 	cy = ((ymax-ymin)/imgy)*y + ymin
 	for x in range(imgx):
 		cx = ((xmax-xmin)/imgx)*x + xmin
-		c = Complex(cx,cy)
-		fractResult = mandelbrot(c)
+		c = newComplex(cx,cy)
+		fractResult = mandelbrotNew(c)
 
 		r = (((fractResult+1)//6)**2)
 		g = 0
@@ -118,7 +125,7 @@ ymax = -0.916318359375
 
 image1 =  Image.new("RGB",(imgx,imgy))
 
-print("\n\n\nIMAGE 1 PROGRESS:")
+print("\n\n\nIMAGE 1 [built-in complex] PROGRESS:")
 for y in bar(range(imgy)):
 	cy = ((ymax-ymin)/imgy)*y + ymin
 	for x in range(imgx):
@@ -147,13 +154,13 @@ ymax = -1.1158554840087893
 
 image2 = Image.new("RGB",(imgx,imgy))
 
-print("\n\n\nIMAGE 2 PROGRESS:")
+print("\n\n\nIMAGE 2 [custom complex] PROGRESS:")
 for y in bar(range(imgy)):
 	cy = ((ymax-ymin)/imgy)*y + ymin
 	for x in range(imgx):
 		cx = ((xmax-xmin)/imgx)*x + xmin
-		c = Complex(cx,cy)
-		fractResult = mandelbrot(c)
+		c = newComplex(cx,cy)
+		fractResult = mandelbrotNew(c)
 
 		if fractResult > 14:
 			r = int((fractResult**2)/2)
@@ -169,7 +176,7 @@ for y in bar(range(imgy)):
 			b = 0
 		else:
 			r = 0
-			g = mandelbrot(c)*15
+			g = fractResult*15
 			b = 0
 		image2.putpixel((x,y),(r,g,b))
 
@@ -189,7 +196,7 @@ ymax = -1.1158554840087893
 
 image2 = Image.new("RGB",(imgx,imgy))
 
-print("\n\n\nIMAGE 2 PROGRESS:")
+print("\n\n\nIMAGE 2 [built-in complex] PROGRESS:")
 for y in bar(range(imgy)):
 	cy = ((ymax-ymin)/imgy)*y + ymin
 	for x in range(imgx):
@@ -231,13 +238,13 @@ ymax = 1
 
 image3 = Image.new("RGB",(imgx,imgy))
 
-print("\n\n\nIMAGE 3 PROGRESS:")
+print("\n\n\nIMAGE 3 [custom complex] PROGRESS:")
 for y in bar(range(imgy)):
 	cy = ((ymax-ymin)/imgy)*y + ymin
 	for x in range(imgx):
 		cx = ((xmax-xmin)/imgx)*x + xmin
-		c = Complex(cx,cy)
-		fractResult = mandelbrot(c, 5)
+		c = newComplex(cx,cy)
+		fractResult = mandelbrotNew(c, 5)
 		r = int(((int(fractResult**2.25))%256)*1.25)
 		g = int(((int(fractResult**2.25))%256)*0.6) #*0.6 creates the orange in combination with the red
 		b = 0
@@ -260,7 +267,7 @@ ymax = 1
 
 image3 = Image.new("RGB",(imgx,imgy))
 
-print("\n\n\nIMAGE 3 PROGRESS:")
+print("\n\n\nIMAGE 3 [built-in complex] PROGRESS:")
 for y in bar(range(imgy)):
 	cy = ((ymax-ymin)/imgy)*y + ymin
 	for x in range(imgx):
