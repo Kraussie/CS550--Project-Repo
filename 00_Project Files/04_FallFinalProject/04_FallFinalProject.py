@@ -4,12 +4,6 @@
 # Fall Final Project
 # SOURCES/USEFUL LINKS:
 
-#PREREQUESITES:
-#- NEED LIBRARY: "colorama"
-
-#How to install "colorama":
-#- CMND IN TERMINAL: "pip install colorama"
-
 # On my honor, I have neither given nor received unauthorized aid.
 # Signed: NK 11/20/2019
 # *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*
@@ -19,9 +13,6 @@ from progressbar import progressbar as bar
 import os, time, math
 
 images = []
-
-# saves the start time of the program
-startTime = time.time()
 
 os.system('clear')
 print("FRACTAL IMAGE RENDERING:")
@@ -35,31 +26,38 @@ class Complex:
 		self.re = re
 		self.im = im
 
-	#custom addition/subtraction function
+	#custom addition/subtraction function, sourced from:
+	#https://www2.clarku.edu/faculty/djoyce/complex/plane.html
 	def __add__(self, other):
 		return Complex(self.re + other.re, self.im + other.im)
 
-	def __sub__(self,other):
-		return Complex(self.re - other.re, self.im - other.im)
-
-	#custom multiplication function
+	#custom multiplication function, equation sourced from:
+	#https://www2.clarku.edu/faculty/djoyce/complex/mult.html
 	def __mul__(self, other):
-    	mulRE1 = self.re * other.re
-    	mulRE2 = self.im * other.im
-    	mulIM1 = self.re * other.im
-    	mulIM2 = self.im * other.re
+		mulRE1 = self.re * other.re
+		mulRE2 = self.im * other.im
+		mulIM1 = self.re * other.im
+		mulIM2 = self.im * other.re
 		return Complex(mulRE1 - mulRE2, mulIM1 + mulIM2)
 
-	#custom power function
+	#custom power function, will multiply itself as many times as specificied by the other variable
 	def __pow__(self, other):
-		return Complex(self.re**other,self.im**other)
+		for powerReps in range(other):
+			newSelf = self.__mul__(self)
+		return newSelf
 
-	#custom absolute value function
+	#custom absolute value function, equation sourced from:
+	# https://www2.clarku.edu/faculty/djoyce/complex/abs.html
 	def __abs__(self):
 		return math.hypot(self.re, self.im)
 
 	#custom string representation
-	#def __str__(self):
+	def __str__(self):
+		result = str(self.re)
+		result += " + "
+		result += str(self.im)
+		result += "i"
+		return result
 
 def mandelbrot(c, power=2, z=Complex(0,0), count=0):
 	z = z**power + c
@@ -68,11 +66,19 @@ def mandelbrot(c, power=2, z=Complex(0,0), count=0):
 		return count
 	return mandelbrot(c,power,z,count)
 
+def timeCalc(startTime, endTime, imageDesc):
+	#calculates total time elapsed
+	totalTime = endTime - startTime
+	#translate total time into minutes and seconds
+	totalTimeMin = int(totalTime//60)
+	totalTimeSec = totalTime%60
+	print("IMAGE", imageDesc, "RUN-TIME:", totalTimeMin, "Minutes and", totalTimeSec, "Seconds")
+
 # *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*
-# IMAGE 1 RUN
-'''
-I wanted this image to represent a lively city and the connected highways that branch off from large cities like New York. The red/pink point to the highways that are constantly lit up, and the large concentrations of red/pink are example of small/large cities. At the top of the image, there is a smaller city while in the direct center, there is a large city.
-'''
+# IMAGE 1 RUN [custom complex]
+# saves the start time of the program
+startTime = time.time()
+
 maxIterations = 255
 imgx,imgy = 1000,1000
 xmin = -0.1151953125
@@ -95,15 +101,43 @@ for y in bar(range(imgy)):
 		b = (fractResult*50)%256
 		image1.putpixel((x,y),(r,g,b))
 
-images.append(image1)
-
+#saves the end time of the program and calculates time to run
+endTime = time.time()
+timeCalc(startTime, endTime, "1 [custom complex]")
 
 # *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*
-# IMAGE 2 RUN
-'''
-While exploring the mandelbrot fractal, I noticed that there were a few parts of the fractal that resembled a lightning bolt. That's pretty much what I wanted to show with this image, but I wanted to go a bit further by using if/elif functions to colorcode different parts of the image. 
-'''
-'''
+# IMAGE 1 RUN [built-in complex]
+startTime = time.time()
+
+maxIterations = 255
+imgx,imgy = 1000,1000
+xmin = -0.1151953125
+xmax = -0.0962109375
+ymin = -0.935302734375
+ymax = -0.916318359375
+
+image1 =  Image.new("RGB",(imgx,imgy))
+
+print("\n\n\nIMAGE 1 PROGRESS:")
+for y in bar(range(imgy)):
+	cy = ((ymax-ymin)/imgy)*y + ymin
+	for x in range(imgx):
+		cx = ((xmax-xmin)/imgx)*x + xmin
+		c = complex(cx,cy)
+		fractResult = mandelbrot(c)
+
+		r = (((fractResult+1)//6)**2)
+		g = 0
+		b = (fractResult*50)%256
+		image1.putpixel((x,y),(r,g,b))
+
+endTime = time.time()
+timeCalc(startTime, endTime, "1 [built-in complex]")
+
+# *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*
+# IMAGE 2 RUN [custom complex]
+startTime = time.time()
+
 maxIterations = 255
 imgx,imgy = 1000,1000
 xmin = -0.1594882621765136
@@ -139,14 +173,55 @@ for y in bar(range(imgy)):
 			b = 0
 		image2.putpixel((x,y),(r,g,b))
 
-images.append(image2)
-'''
+endTime = time.time()
+timeCalc(startTime, endTime, "2 [custom complex]")
+
 # *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*
-# IMAGE 3 RUN
-'''
-I essentially chose this fractal because I liked the symmetrical pattern it created. After playing around with the colors for awhile, I figured out an equation that created a really awesome silhouette effect with the fractal. From there I continued to play around with the exact colors, proportions, and brightness. 
-'''
-'''
+# IMAGE 2 RUN [built-in complex]
+startTime = time.time()
+
+maxIterations = 255
+imgx,imgy = 1000,1000
+xmin = -0.1594882621765136
+xmax = -0.1537981567382812
+ymin = -1.1101653785705567
+ymax = -1.1158554840087893
+
+image2 = Image.new("RGB",(imgx,imgy))
+
+print("\n\n\nIMAGE 2 PROGRESS:")
+for y in bar(range(imgy)):
+	cy = ((ymax-ymin)/imgy)*y + ymin
+	for x in range(imgx):
+		cx = ((xmax-xmin)/imgx)*x + xmin
+		c = complex(cx,cy)
+		fractResult = mandelbrot(c)
+
+		if fractResult > 14:
+			r = int((fractResult**2)/2)
+			g = int((fractResult**2)/2) 
+			b = 0
+		elif fractResult > 9:
+			r = int((fractResult**3)/20)
+			g = int((fractResult**3)/20)
+			b = int((fractResult**2.1)/2.5)
+		elif fractResult > 7:
+			r = 0
+			g = 0
+			b = 0
+		else:
+			r = 0
+			g = mandelbrot(c)*15
+			b = 0
+		image2.putpixel((x,y),(r,g,b))
+
+endTime = time.time()
+timeCalc(startTime, endTime, "2 [built-in complex]")
+
+# *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*
+# IMAGE 3 RUN [custom complex]
+startTime = time.time()
+
 maxIterations = 255
 imgx,imgy = 1000,1000
 xmin = -1
@@ -169,39 +244,34 @@ for y in bar(range(imgy)):
 
 		image3.putpixel((x,y),(r,g,b))
 
-images.append(image3)
-'''
-# *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*
-# IMAGE COMBINE/SAVE
-offsetX = 0
-imgx, imgy = (len(images) * 1000), 1000
-fullImg = Image.new("RGB",(imgx,imgy))
-
-# sourced from stackoverflow.com
-for im in images:
-  fullImg.paste(im, (offsetX,0))
-  offsetX += 1000
-
-print("\n\n\nCheck the currently active directory for a file labled 'nkrauss_combinedImg.png' and other files")
-image1.save("nkrauss_image1.png","PNG")
-#image2.save("nkrauss_image2.png","PNG")
-#image3.save("nkrauss_image3.png","PNG")
-fullImg.save("nkrauss_combinedImg.png","PNG")
-fullImg.show()
-
-# *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*
-# RUN TIME CALCULATION
-
-#saves the end time of the program
 endTime = time.time()
-#calculates total time elapsed
-totalTime = endTime - startTime
-#translate total time into minutes and seconds
-totalTimeMin = int(totalTime//60)
-totalTimeSec = totalTime%60
-print("PROGRAM RUN-TIME:", totalTimeMin, "Minutes and", totalTimeSec, "Seconds")
+timeCalc(startTime, endTime, "3 [custom complex]")
 
-'''
-PEER REVIEW COMMENTS
-Roshni - image 1 has cool colors and results in a color with complimentary colors, image 2 looks like a lightning bolt hitting the ground-great imagery, image 3 has cool symmetry and a great red effect around the actual mandelbrot
-'''
+# *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*
+# IMAGE 3 RUN [built-in complex]
+startTime = time.time()
+
+maxIterations = 255
+imgx,imgy = 1000,1000
+xmin = -1
+xmax = 1
+ymin = -1
+ymax = 1
+
+image3 = Image.new("RGB",(imgx,imgy))
+
+print("\n\n\nIMAGE 3 PROGRESS:")
+for y in bar(range(imgy)):
+	cy = ((ymax-ymin)/imgy)*y + ymin
+	for x in range(imgx):
+		cx = ((xmax-xmin)/imgx)*x + xmin
+		c = complex(cx,cy)
+		fractResult = mandelbrot(c, 5)
+		r = int(((int(fractResult**2.25))%256)*1.25)
+		g = int(((int(fractResult**2.25))%256)*0.6) #*0.6 creates the orange in combination with the red
+		b = 0
+
+		image3.putpixel((x,y),(r,g,b))
+
+endTime = time.time()
+timeCalc(startTime, endTime, "3 [built-in complex]")
