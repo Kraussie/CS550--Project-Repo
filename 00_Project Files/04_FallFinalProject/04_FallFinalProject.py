@@ -1,8 +1,15 @@
 # Author: Nate K
 # Date of Creation: 11/07/2019
-# Date of Last Edit: 11/07/2019
+# Date of Last Edit: 11/16/2019
 # Fall Final Project
 # SOURCES/USEFUL LINKS:
+# https://nyu-cds.github.io/python-performance-tips/03-builtin/
+
+''' CONCLUSIONS FROM TESTING
+The time to run the custom complex class was a lot longer than the built-in complex class. For the first image, it was 8x slower. For the second, 5.5x slower. For the third, 10x slower. After re-executing this program a few times, these results were the same throughout the tests. 
+
+Because Python's inbuilt functions are programmed using C, they will execute much faster than user-defined classes. C is a much faster programming language than Python. This was concluded using the NYU github referenced linked above. The difference in speeds between images is also likely because of the varying complexities of the calculations. The third image has much more calculations than the second, and is thus less efficient.
+'''
 
 # On my honor, I have neither given nor received unauthorized aid.
 # Signed: NK 11/20/2019
@@ -29,11 +36,13 @@ class newComplex:
 	#custom addition/subtraction function, sourced from:
 	#https://www2.clarku.edu/faculty/djoyce/complex/plane.html
 	def __add__(self, other):
+		#adds the real parts and the imaginary parts (separately) of each complex number
 		return newComplex(self.re + other.re, self.im + other.im)
 
 	#custom multiplication function, equation sourced from:
 	#https://www2.clarku.edu/faculty/djoyce/complex/mult.html
 	def __mul__(self, other):
+		# multiples real/imaginary parts following the equation linked above. 
 		mulRE1 = self.re * other.re
 		mulRE2 = self.im * other.im
 		mulIM1 = self.re * other.im
@@ -49,6 +58,7 @@ class newComplex:
 	#custom absolute value function, equation sourced from:
 	# https://www2.clarku.edu/faculty/djoyce/complex/abs.html
 	def __abs__(self):
+		# calculates the dist of the hypot of the real/imaginary parts using the equation linked above
 		return math.hypot(self.re, self.im)
 
 	#custom string representation
