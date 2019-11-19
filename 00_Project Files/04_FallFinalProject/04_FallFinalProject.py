@@ -1,29 +1,38 @@
 # Author: Nate K
 # Date of Creation: 11/07/2019
-# Date of Last Edit: 11/16/2019
+# Date of Last Edit: 11/19/2019
 # Fall Final Project
 # SOURCES/USEFUL LINKS:
 # https://nyu-cds.github.io/python-performance-tips/03-builtin/
 
-''' CONCLUSIONS FROM TESTING
-The time to run the custom complex class was a lot longer than the built-in complex class. For the first image, it was 8x slower. For the second, 5.5x slower. For the third, 10x slower. After re-executing this program a few times, these results were the same throughout the tests. 
+#PREREQUESITES:
+#- NEED LIBRARY: "progressbar2"
 
-Because Python's inbuilt functions are programmed using C, they will execute much faster than user-defined classes. C is a much faster programming language than Python. This was concluded using the NYU github referenced linked above. The difference in speeds between images is also likely because of the varying complexities of the calculations. The third image has much more calculations than the second, and is thus less efficient.
+#How to install "numpy":
+#- CMND IN TERMINAL: "pip3 install progressbar2"
+
+''' CONCLUSIONS/REFLECTIONS FROM TESTING
+The time to run the custom complex class was a lot longer than the built-in complex class. For all three images, the run time of the complex class was around 10 times slower than the built-in class. After re-executing this program a few times, these results were the same throughout the tests. 
+
+Because Python's inbuilt functions are programmed using C, they will execute much faster than user-defined classes. C is a much faster programming language than Python. This was concluded using the NYU github referenced linked above. 
+
+The difference in speeds between images is also likely because of the varying complexities of the calculations. The third image has much more calculations than the second, and is thus less efficient. One thing that I wonder is how much the performance changes between computers?
+
+This project clearly emphasized how efficient the built-in programs are. It really showed me that I should research which built-in programs exist in Python so I can best utilize them in my programs. It was painful to watch how slow my custom complex class worked. 
+
+PEER FEEDBACK:
+Krystal - I like the colors. I like organizational style you used, as well as the comments/notes you leave for yourself. There is also good use of variables.
 '''
 
 # On my honor, I have neither given nor received unauthorized aid.
 # Signed: NK 11/20/2019
 # *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*
 # PROGRAM SETUP
-from PIL import Image
 from progressbar import progressbar as bar
 import os, time, math
 
-images = []
-
 os.system('clear')
 print("FRACTAL IMAGE RENDERING:")
-
 # *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*
 # PROGRAM FUNCTIONS
 
@@ -90,7 +99,7 @@ def timeCalc(startTime, endTime, imageDesc):
 	totalTimeMin = int(totalTime//60)
 	totalTimeSec = totalTime%60
 	print("IMAGE", imageDesc, "RUN-TIME:", totalTimeMin, "Minutes and", totalTimeSec, "Seconds")
-
+	return totalTime
 # *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*
 # IMAGE 1 RUN [custom complex]
 # saves the start time of the program
@@ -103,8 +112,6 @@ xmax = -0.0962109375
 ymin = -0.935302734375
 ymax = -0.916318359375
 
-image1 =  Image.new("RGB",(imgx,imgy))
-
 print("\n\n\nIMAGE 1 [custom complex] PROGRESS:")
 for y in bar(range(imgy)):
 	cy = ((ymax-ymin)/imgy)*y + ymin
@@ -116,12 +123,10 @@ for y in bar(range(imgy)):
 		r = (((fractResult+1)//6)**2)
 		g = 0
 		b = (fractResult*50)%256
-		image1.putpixel((x,y),(r,g,b))
 
 #saves the end time of the program and calculates time to run
 endTime = time.time()
-timeCalc(startTime, endTime, "1 [custom complex]")
-
+img1cust = timeCalc(startTime, endTime, "1 [custom complex]")
 # *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*
 # IMAGE 1 RUN [built-in complex]
 startTime = time.time()
@@ -132,8 +137,6 @@ xmin = -0.1151953125
 xmax = -0.0962109375
 ymin = -0.935302734375
 ymax = -0.916318359375
-
-image1 =  Image.new("RGB",(imgx,imgy))
 
 print("\n\n\nIMAGE 1 [built-in complex] PROGRESS:")
 for y in bar(range(imgy)):
@@ -146,11 +149,9 @@ for y in bar(range(imgy)):
 		r = (((fractResult+1)//6)**2)
 		g = 0
 		b = (fractResult*50)%256
-		image1.putpixel((x,y),(r,g,b))
 
 endTime = time.time()
-timeCalc(startTime, endTime, "1 [built-in complex]")
-
+img1built = timeCalc(startTime, endTime, "1 [built-in complex]")
 # *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*
 # IMAGE 2 RUN [custom complex]
 startTime = time.time()
@@ -161,8 +162,6 @@ xmin = -0.1594882621765136
 xmax = -0.1537981567382812
 ymin = -1.1101653785705567
 ymax = -1.1158554840087893
-
-image2 = Image.new("RGB",(imgx,imgy))
 
 print("\n\n\nIMAGE 2 [custom complex] PROGRESS:")
 for y in bar(range(imgy)):
@@ -188,11 +187,9 @@ for y in bar(range(imgy)):
 			r = 0
 			g = fractResult*15
 			b = 0
-		image2.putpixel((x,y),(r,g,b))
 
 endTime = time.time()
-timeCalc(startTime, endTime, "2 [custom complex]")
-
+img2cust = timeCalc(startTime, endTime, "2 [custom complex]")
 # *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*
 # IMAGE 2 RUN [built-in complex]
 startTime = time.time()
@@ -203,8 +200,6 @@ xmin = -0.1594882621765136
 xmax = -0.1537981567382812
 ymin = -1.1101653785705567
 ymax = -1.1158554840087893
-
-image2 = Image.new("RGB",(imgx,imgy))
 
 print("\n\n\nIMAGE 2 [built-in complex] PROGRESS:")
 for y in bar(range(imgy)):
@@ -230,11 +225,9 @@ for y in bar(range(imgy)):
 			r = 0
 			g = mandelbrot(c)*15
 			b = 0
-		image2.putpixel((x,y),(r,g,b))
 
 endTime = time.time()
-timeCalc(startTime, endTime, "2 [built-in complex]")
-
+img2built = timeCalc(startTime, endTime, "2 [built-in complex]")
 # *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*
 # IMAGE 3 RUN [custom complex]
 startTime = time.time()
@@ -245,8 +238,6 @@ xmin = -1
 xmax = 1
 ymin = -1
 ymax = 1
-
-image3 = Image.new("RGB",(imgx,imgy))
 
 print("\n\n\nIMAGE 3 [custom complex] PROGRESS:")
 for y in bar(range(imgy)):
@@ -259,11 +250,8 @@ for y in bar(range(imgy)):
 		g = int(((int(fractResult**2.25))%256)*0.6) #*0.6 creates the orange in combination with the red
 		b = 0
 
-		image3.putpixel((x,y),(r,g,b))
-
 endTime = time.time()
-timeCalc(startTime, endTime, "3 [custom complex]")
-
+img3cust = timeCalc(startTime, endTime, "3 [custom complex]")
 # *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*
 # IMAGE 3 RUN [built-in complex]
 startTime = time.time()
@@ -274,8 +262,6 @@ xmin = -1
 xmax = 1
 ymin = -1
 ymax = 1
-
-image3 = Image.new("RGB",(imgx,imgy))
 
 print("\n\n\nIMAGE 3 [built-in complex] PROGRESS:")
 for y in bar(range(imgy)):
@@ -288,7 +274,16 @@ for y in bar(range(imgy)):
 		g = int(((int(fractResult**2.25))%256)*0.6) #*0.6 creates the orange in combination with the red
 		b = 0
 
-		image3.putpixel((x,y),(r,g,b))
-
 endTime = time.time()
-timeCalc(startTime, endTime, "3 [built-in complex]")
+img3built = timeCalc(startTime, endTime, "3 [built-in complex]")
+# *+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*
+# FINAL PRINT
+finPrint = '\n\n\n'
+finPrint += '-'*20
+finPrint += '\nIMAGE 1 [custom]: '+str(img1cust)+' Seconds'
+finPrint += '\nIMAGE 1 [built]:  '+str(img1built)+' Seconds'
+finPrint += '\nIMAGE 2 [custom]: '+str(img2cust)+' Seconds'
+finPrint += '\nIMAGE 2 [built]:  '+str(img2built)+' Seconds'
+finPrint += '\nIMAGE 3 [custom]: '+str(img3cust)+' Seconds'
+finPrint += '\nIMAGE 3 [built]:  '+str(img3built)+' Seconds'
+print(finPrint)
