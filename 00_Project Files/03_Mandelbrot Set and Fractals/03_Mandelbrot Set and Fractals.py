@@ -21,8 +21,6 @@ from progressbar import progressbar as bar
 import os
 
 images = []
-# saves the start time of the program
-startTime = time.time()
 
 os.system('clear')
 print("FRACTAL IMAGE RENDERING:")
